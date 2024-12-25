@@ -51,8 +51,7 @@ async function processQueue() {
             continue;
             }
 
-            const tweet = result.element; // BLPOP returns { key, element }
-            // console.log(`Processing tweet: ${tweet}`);
+            const tweet = result.element;
 
             // Extract hashtags and update counts
             const hashtags = extractHashtags(tweet);
@@ -60,7 +59,6 @@ async function processQueue() {
                 await redisClient.zIncrBy(HASHTAGS_SORTED_KEY, 1, hashtag);
             }
 
-            // console.log(`Tweet processing completed for: ${tweet}`);
             performance.mark('end-process-tweet');
             performance.measure('Worker tweet processing completed. Duration:', 'start-process-tweet', 'end-process-tweet');
         } catch (error) {

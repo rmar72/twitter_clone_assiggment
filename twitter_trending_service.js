@@ -11,7 +11,6 @@ const tracer = require('dd-trace').init({
 const express = require('express');
 const cluster = require('cluster')
 const os = require('os')
-// const pino = require('pino-http')();
 const { createClient } = require('redis');
 const crypto = require('crypto');
 const { performance, PerformanceObserver } = require('perf_hooks');
@@ -52,7 +51,6 @@ if (cluster.isMaster) {
 
     const app = express();
     app.use(express.json());
-    // app.use(pino)
 
     // POST /tweet endpoint
     app.post('/tweet', tweetLimiter, async (req, res) => {
@@ -65,9 +63,6 @@ if (cluster.isMaster) {
     
         try {
             const tweetHash = generateHash(tweet);
-            // console.log('tweetHash', tweetHash);
-            // req.log.info('tweetHash', tweetHash)
-
     
             // Check if the tweet is already processed
             const isDuplicate = await redisClient.sIsMember(PROCESSED_TWEETS_KEY, tweetHash);
@@ -80,8 +75,6 @@ if (cluster.isMaster) {
             await redisClient.rPush(TWEET_QUEUE_KEY, tweet); // Push to the Redis queue for the worker
     
             const successMessage = 'Tweet queued for processing.';
-            // console.log(successMessage);
-            // req.log.info('Success message: ', successMessage)
             performance.mark('end-post-tweet');
             performance.measure('POST /tweet duration', 'start-post-tweet', 'end-post-tweet');
             res.status(202).json({ message: successMessage});
@@ -105,8 +98,6 @@ if (cluster.isMaster) {
             res.status(500).json({ error: 'Internal Server Error' });
         }
     });
-
-    console.log('process.env', process.env)
 
     // Start the server
     app.listen(process.env.PORT, () => {
