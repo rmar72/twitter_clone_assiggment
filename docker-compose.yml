@@ -1,0 +1,59 @@
+version: '3.9'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: app
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      - redis
+    restart: always
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.worker
+    container_name: worker
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      - redis
+    restart: always
+
+  redis:
+    image: redis
+    container_name: redis
+    ports:
+      - "6380:6379" # Map host port 6380 to container port 6379
+    volumes:
+      - redis-data:/data # redis data directory for persistence
+    command: ["redis-server", "--save", "60", "1", "--loglevel", "warning"]
+    restart: always
+
+  # datadog:
+  #   image: gcr.io/datadoghq/agent:latest
+  #   container_name: datadog
+  #   environment:
+  #     - DD_API_KEY= # Your Datadog API key
+  #     - DD_SITE=us5.datadoghq.com                  # Ensure this matches your Datadog site
+  #     - DD_ENV=production                          # Specify your environment
+  #     - DD_LOGS_ENABLED=true                       # Enable logs collection
+  #     - DD_LOGS_CONFIG_CONTAINER_COLLECT_ALL=true  # Collect logs from all containers
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock  # Required for Docker monitoring
+  #     - ./conf.d:/etc/datadog-agent/conf.d:ro      # Optional: Custom configurations
+  #   ports:
+  #     - "8126:8126"                                # Expose port for APM
+  #   restart: always
+
+volumes:
+  redis-data:  # for Redis persistence
+
