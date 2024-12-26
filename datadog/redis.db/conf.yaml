@@ -1,0 +1,5 @@
+init_config: 
+instances: 
+  - host: "172.23.0.4" 
+  port: 6379 
+  command_stats: true
