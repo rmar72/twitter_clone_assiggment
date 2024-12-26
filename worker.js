@@ -11,6 +11,7 @@ const tracer = require('dd-trace').init({
 const { createClient } = require('redis');
 const { performance, PerformanceObserver } = require('perf_hooks');
 const { TWEET_QUEUE_KEY, HASHTAGS_SORTED_KEY } = require('./constants');
+const { extractHashtags } = require('./utils'); 
 
 // redis config
 const redisClient = createClient({
@@ -18,22 +19,7 @@ const redisClient = createClient({
 });
 redisClient.connect().catch(console.error);
 
-// extracts hashtags from a tweet
-function extractHashtags(tweet) {
-    const hashtagRegex = /#\w+/g;
-    return tweet.match(hashtagRegex) || [];
-}
-
 let emptyQueueCount = 0;
-
-
-// Observe performance entries
-const obs = new PerformanceObserver((items) => {
-    items.getEntries().forEach((entry) => {
-        console.log(`${entry.name}: ${entry.duration}ms`);
-    });
-});
-obs.observe({ entryTypes: ['measure'] });
 
 
 // Worker logic is to process tweets from the queue
@@ -69,3 +55,5 @@ async function processQueue() {
 }
 
 processQueue();
+
+module.exports = { extractHashtags }

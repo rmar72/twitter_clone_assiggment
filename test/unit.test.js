@@ -1,5 +1,4 @@
-import { extractHashtags } from '../worker';
-import { generateHash } from '../twitter_trending_service'; // Adjust import paths as needed
+const { generateHash, extractHashtags } = require('../utils'); 
 
 describe('Unit Tests', () => {
     it('should extract hashtags correctly', () => {
@@ -13,13 +12,13 @@ describe('Unit Tests', () => {
         const hash1 = generateHash('Hello world!');
         const hash2 = generateHash('Hello world!');
 
-        expect(hash1).toBe(hash2); // Same input produces the same hash
+        expect(hash1).toBe(hash2); // Same input = produce same hash
     });
 
     it('should generate different hashes for different inputs', () => {
         const hash1 = generateHash('Hello world!');
         const hash2 = generateHash('Hello there!');
 
-        expect(hash1).not.toBe(hash2); // Different inputs produce different hashes
+        expect(hash1).not.toBe(hash2); // different input = produce different hashes
     });
 });

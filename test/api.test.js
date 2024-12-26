@@ -1,42 +1,20 @@
-// const request = require('supertest');
-// const app = require('../twitter_trending_service'); // Path to your server app
-
-// describe('API Integration Tests', () => {
-//     test('POST /tweet should queue a new tweet', async () => {
-//         const response = await request(app)
-//             .post('/tweet')
-//             .send({ tweet: 'Test tweet with #test' });
-
-//         expect(response.status).toBe(202);
-//         expect(response.body.message).toBe('Tweet queued for processing.');
-//     });
-
-//     test('POST /tweet should skip duplicate tweet', async () => {
-//         await request(app)
-//             .post('/tweet')
-//             .send({ tweet: 'Duplicate tweet with #duplicate' });
-
-//         const response = await request(app)
-//             .post('/tweet')
-//             .send({ tweet: 'Duplicate tweet with #duplicate' });
-
-//         expect(response.status).toBe(200);
-//         expect(response.body.message).toBe('Duplicate tweet, skipped processing.');
-//     });
-
-//     test('GET /trending-hashtags should return trending hashtags', async () => {
-//         const response = await request(app).get('/trending-hashtags');
-
-//         expect(response.status).toBe(200);
-//         expect(Array.isArray(response.body.hashtags)).toBe(true);
-//     });
-// });
-
-
-import request from 'supertest';
-import app from '../twitter_trending_service'; // Path to your app
+const { createApp } = require('../twitter_trending_service');
+const Redis = require('ioredis-mock');
+const request = require('supertest');
 
 describe('API Integration Tests', () => {
+    let app;
+    let redisClient;
+
+    beforeAll(() => {
+        redisClient = new Redis(); // Mock Redis client
+        app = createApp(redisClient);
+    });
+
+    afterAll(async () => {
+        await redisClient.quit(); // Clean up Redis mock
+    });
+
     it('should queue a new tweet', async () => {
         const response = await request(app)
             .post('/tweet')
@@ -50,14 +28,10 @@ describe('API Integration Tests', () => {
         const tweet = 'This is #DuplicateTest';
 
         // First request
-        await request(app)
-            .post('/tweet')
-            .send({ tweet });
+        await request(app).post('/tweet').send({ tweet });
 
         // Second request (duplicate)
-        const response = await request(app)
-            .post('/tweet')
-            .send({ tweet });
+        const response = await request(app).post('/tweet').send({ tweet });
 
         expect(response.status).toBe(200);
         expect(response.body.message).toBe('Duplicate tweet, skipped processing.');
