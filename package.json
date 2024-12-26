@@ -8,13 +8,13 @@
     "test": "jest --runInBand",
     "test:unit": "jest --testPathPattern=unit",
     "test:integration": "jest test/api.test.js",
-    "test:load": "k6 run load-test.js"
+    "test:load": "k6 run load-test.js",
+    "clinic": "clinic doctor -- node twitter_trending_service.js"
   },
   "author": "Ruben Solorio",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.1",
-    "clinic": "^13.0.0",
     "dd-trace": "^5.30.0",
     "express": "^4.21.2",
     "express-rate-limit": "^7.5.0",
@@ -22,6 +22,7 @@
     "redis": "^4.7.0"
   },
   "devDependencies": {
+    "clinic": "^13.0.0",
     "ioredis-mock": "^8.9.0",
     "jest": "^29.7.0",
     "supertest": "^7.0.0"
