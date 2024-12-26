@@ -8,7 +8,7 @@
     "test": "jest --runInBand",
     "test:unit": "jest --testPathPattern=unit",
     "test:integration": "jest test/api.test.js",
-    "test:load": "k6 run load-test.js",
+    "test:load": "k6 run load-tests/load-test.js",
     "clinic": "clinic doctor -- node twitter_trending_service.js"
   },
   "author": "Ruben Solorio",
