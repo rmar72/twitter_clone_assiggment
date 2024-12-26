@@ -2,20 +2,19 @@
 import http from 'k6/http';
 import { check, sleep } from 'k6';
 
-// Base URL of the application
-const BASE_URL = 'http://localhost:3000';
+const BASE_URL = 'http://localhost:8080';
 
 export const options = {
     stages: [
-        { duration: '30s', target: 100 },  // Ramp up to 100 users in 30 seconds
-        { duration: '1m', target: 500 },   // Sustain 500 users for 1 minute
-        { duration: '2m', target: 1000 },  // Ramp up to 1000 users over 2 minutes
-        { duration: '2m', target: 1000 },  // Sustain 1000 users for 2 minutes
-        { duration: '1m', target: 0 },     // Ramp down to 0 users in 1 minute
+        { duration: '30s', target: 100 },  // 100 users, 30 seconds
+        { duration: '1m', target: 500 },   // 500 users, 1 minute
+        { duration: '2m', target: 1000 },  // 1000 users,  2 minutes
+        { duration: '2m', target: 1000 },  // 1000 users, 2 minutes
+        { duration: '1m', target: 0 },     // 0 users, 1 minute
     ],
     thresholds: {
         http_req_duration: ['p(95)<500'],  // 95% of requests should complete in < 500ms
-        http_req_failed: ['rate<0.01'],    // Error rate should be < 1%
+        http_req_failed: ['rate<0.01'],    // Error rate should be < 1% pretty stringent demand
     },
 };
 
@@ -28,7 +27,6 @@ const tweets = [
 ];
 
 export default function () {
-    // Randomly pick a tweet
     const tweet = tweets[Math.floor(Math.random() * tweets.length)];
 
     // POST /tweet
@@ -39,7 +37,7 @@ export default function () {
         'POST /tweet status is 202 or 200': (r) => r.status === 202 || r.status === 200,
     });
 
-    // Simulate a short wait
+    // Simulate a sleep wait
     sleep(1);
 
     // GET /trending-hashtags
