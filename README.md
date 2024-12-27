@@ -95,7 +95,7 @@ npm install
 npm run start
 
 - **Perform Clinic check on API:**
-npm run clinic 
+npm run clinic  (Will need to comment out cluster code since clinic.js does not support clustered apps)
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
