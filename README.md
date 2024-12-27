@@ -78,6 +78,11 @@ So far my fiindings are:
 
 _Note:_ load-test3.js requires additional work to address some inconsistencies and better reflect realistic stress scenarios.
 
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+**Process Management**
+
+I also have further explored using PM2 for production purposes to handle process management, clustering, and monitoring to enhance stability and performance.
+
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
 ### **Local Development Without Docker**
 
@@ -108,3 +113,4 @@ The application is integrated with Datadog for monitoring, including metrics and
 A Datadog API key is required to set up the Datadog Agent. This key ensures the agent can report metrics and traces to your Datadog account.
 The setup involves starting a new container for the Datadog Agent (as outlined in the Datadog documentation), not adding another service to the existing docker-compose.yml.
 A folder with screenshots of the current Datadog dashboard is available for reference.
+
