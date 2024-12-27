@@ -9,16 +9,19 @@
     "test:unit": "jest --testPathPattern=unit",
     "test:integration": "jest test/api.test.js",
     "test:load": "k6 run load-tests/load-test.js",
-    "clinic": "clinic doctor -- node twitter_trending_service.js"
+    "clinic": "clinic doctor -- node twitter_trending_service.js",
+    "startPM2": "pm2 start twitter_trending_service.js worker.js --name \"trending-service\" --name \"worker\""
   },
   "author": "Ruben Solorio",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.1",
     "dd-trace": "^5.30.0",
+    "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "express-rate-limit": "^7.5.0",
     "pino-http": "^10.3.0",
+    "pm2": "^5.4.3",
     "redis": "^4.7.0"
   },
   "devDependencies": {
